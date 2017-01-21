@@ -4,6 +4,8 @@ import hashlib
 from multiprocessing.dummy import Pool
 from dictionary.baiCiZhanDictionary import BaiCiZhanDictionary
 import sys
+import argparse
+import fileinput
 
 def dict2anki(d,fmt):
     d = defaultdict(lambda :"",d)
@@ -17,9 +19,28 @@ def vocabulary2anki(vocabulary,fmt):
     return dict2anki(d,fmt)
 
 if __name__ == "__main__":
-    words = ("hello","world")
+    # 解析参数
+    parser = argparse.ArgumentParser(description='查询单词意义,并以anki可以导入的方式输出')
+    parser.add_argument(dest='source_file',metavar='source_file',nargs='*')
+    parser.add_argument('-o',dest='dest_file',metavar='dest_file',action='store')
+    args = parser.parse_args()
+
+    if len(args.source_file) == 0:
+        source_file = sys.stdin
+    else:
+        source_file = fileinput.input(args.source_file)
+
+    if args.dest_file:
+        dest_file = open(args.dest_file,'w')
+    else:
+        dest_file = sys.stdout
+
+    words = source_file.readlines()
     keys = ('word','{mean}','{acc}','{sentence_en}','{sentence_cn}','{img}','{mp3}')
     fmt = "|".join(keys)
     pool = Pool(10)
-    s = pool.map(lambda word:vocabulary2anki(word,fmt),words)
-    print(s)
+    records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
+    for record in records:
+        print(record,file=dest_file)
+    source_file.close()
+    dest_file.close
