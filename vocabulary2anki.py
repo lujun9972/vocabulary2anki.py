@@ -23,6 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='查询单词意义,并以anki可以导入的方式输出')
     parser.add_argument(dest='source_file',metavar='source_file',nargs='*')
     parser.add_argument('-o',dest='dest_file',metavar='dest_file',action='store')
+    parser.add_argument('--fmt',dest='fmt',action='store',metavar='指定格式',help='其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换"')
     args = parser.parse_args()
 
     if len(args.source_file) == 0:
@@ -35,9 +36,14 @@ if __name__ == "__main__":
     else:
         dest_file = sys.stdout
 
+    if args.fmt:
+        fmt = args.fmt
+    else:
+        keys = ('{word}','{mean}','{acc}','{sentence_en}','{sentence_cn}','{img}','{mp3}')
+        fmt = "|".join(keys)
+
     words = source_file.readlines()
-    keys = ('word','{mean}','{acc}','{sentence_en}','{sentence_cn}','{img}','{mp3}')
-    fmt = "|".join(keys)
+    words = map(lambda word:word.strip(),words)
     pool = Pool(10)
     records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
     for record in records:
