@@ -1,6 +1,7 @@
-import json
 from urllib import request
-from dictionary import Dictionary
+import json
+import re
+from .dictionary import Dictionary
 
 class BaiCiZhanDictionary(Dictionary):
     def search(self,word):
@@ -10,9 +11,10 @@ class BaiCiZhanDictionary(Dictionary):
         explains = json.loads(explains)
         result = {}
         result["img"]= explains.get('img')
-        result["mean"] = explains.get('mean_cn')
+        means = explains.get('mean_cn')
+        result["mean"] = re.sub(r'；\s+','<br>',means)
         result["sentence_en"] = explains.get('st')
         result["sentence_cn"] = explains.get('sttr')
-        result["accent "]= explains.get('accent')
-        result["mp3 "]= "http://baicizhan.qiniucdn.com/word_audios/{}.mp3".format(word)
+        result["accent"]= explains.get('accent')
+        result["mp3"]= "http://baicizhan.qiniucdn.com/word_audios/{}.mp3".format(word)
         return result
