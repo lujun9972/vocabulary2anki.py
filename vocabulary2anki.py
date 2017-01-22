@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+import os.path
 from collections import defaultdict
 import hashlib
 from multiprocessing.dummy import Pool
@@ -6,11 +8,29 @@ from dictionary.baiCiZhanDictionary import BaiCiZhanDictionary
 import sys
 import argparse
 import fileinput
+from urllib import request
+
+def download_for_anki(url):
+    if not url:
+        return ""
+    try:
+        fileext = os.path.splitext(url)[1]
+        filename = hashlib.md5(url.encode()).hexdigest() + fileext
+        filepath = os.path.join("collection.media",filename)
+        if not os.path.exists("collection.media"):
+            os.makedirs("collection.media")
+        request.urlretrieve(url,filepath)
+    except Exception as e:
+        print("fetch {} error:{}".format(url,e),file=sys.stderr)
+        filename = ""
+    return filename
 
 def dict2anki(d,fmt):
     d = defaultdict(lambda :"",d)
-    img = d.get('img')
-    mp3 = d.get('mp3')
+    img = download_for_anki(d.get('img'))
+    d['img'] = img and '<img src="{}"></img>'.format(img)
+    mp3 = download_for_anki(d.get('mp3'))
+    d['mp3'] = mp3 and '[sound:{}]'.format(mp3)
     return fmt.format_map(d)
 
 def vocabulary2anki(vocabulary,fmt):
