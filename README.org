@@ -5,17 +5,18 @@
 #+LANGUAGE:  zh-CN
 #+OPTIONS:  H:6 num:nil toc:t \n:nil ::t |:t ^:nil -:nil f:t *:t <:nil
 
-usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt 指定格式]
-                          [source_file [source_file ...]]
+
+usage: vocabulary2anki.py [-h] [-o 存放结果的目标文件] [--fmt 指定格式]
+                          [存放单词的源文件 [存放单词的源文件 ...]]
 
 查询单词意义,并以anki可以导入的方式输出
 
 positional arguments:
 
-+  source_file
++  存放单词的源文件      每行一个词,如果不填,则会从标准输入读取单词
 
 optional arguments:
 
 +  -h, --help    show this help message and exit
-+  -o dest_file
++  -o 存放结果的目标文件  如果省略,则会写入到标准输出中
 +  --fmt 指定格式    其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换"
