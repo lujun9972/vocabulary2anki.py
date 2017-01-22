@@ -6,7 +6,6 @@ import hashlib
 from multiprocessing.dummy import Pool
 import sys
 import argparse
-import fileinput
 from urllib import request
 from dictionary.jsonDictionary import JsonDictionary
 
@@ -41,15 +40,15 @@ def vocabulary2anki(vocabulary,fmt):
 if __name__ == "__main__":
     # 解析参数
     parser = argparse.ArgumentParser(description='查询单词意义,并以anki可以导入的方式输出')
-    parser.add_argument(dest='source_file',metavar='存放单词的源文件',nargs='*',help='每行一个词,如果不填,则会从标准输入读取单词')
-    parser.add_argument('-o',dest='dest_file',metavar='存放结果的目标文件',action='store',help='如果省略,则会写入到标准输出中')
-    parser.add_argument('--fmt',dest='fmt',action='store',metavar='指定格式',help='其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换"')
+    parser.add_argument(dest='source_file',metavar='source_file',help='存放单词的源文件,每行一个词,如果不填,则会从标准输入读取单词')
+    parser.add_argument('-o',dest='dest_file',metavar='dest_file',action='store',help='存放结果的目标文件,如果省略,则会写入到标准输出中')
+    parser.add_argument('--fmt',dest='fmt',action='store',metavar='format',help='指定输出的格式,其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换,默认值为"{word}|{mean}|{accent}|{sentence_en}|{sentence_cn}|{img}|{mp3}"')
     args = parser.parse_args()
 
     if len(args.source_file) == 0:
         source_file = sys.stdin
     else:
-        source_file = fileinput.input(args.source_file)
+        source_file = open(args.source_file,'r')
 
     if args.dest_file:
         dest_file = open(args.dest_file,'w')

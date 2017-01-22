@@ -1,4 +1,5 @@
 from urllib import request
+from urllib import parse
 import json
 import re
 from .dictionary import Dictionary
@@ -41,7 +42,13 @@ class JsonDictionary(Dictionary):
         result["mean"] = re.sub(self.mean_sep,'<br>',means)
         result["sentence_en"] = self.extract_from_dict(explains,self.sentence_en)
         result["sentence_cn"] = self.extract_from_dict(explains,self.sentence_cn)
-        result["accent"]= self.extract_from_dict(explains,self.accent)
-        result["mp3"]= self.extract_from_dict(explains,self.mp3) or self.mp3.format(word)
-        result["img"]= self.extract_from_dict(explains,self.img) or self.img.format(word)
+        result["accent"] = self.extract_from_dict(explains,self.accent)
+        if parse.urlparse(self.mp3).scheme == '':
+            result["mp3"] = self.extract_from_dict(explains,self.mp3)
+        else:
+            result["mp3"] = self.mp3.format(word)
+        if parse.urlparse(self.img).scheme == '':
+            result["img"] = self.extract_from_dict(explains,self.img)
+        else:
+            result["img"] = self.img.format(word)
         return result
