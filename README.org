@@ -11,9 +11,11 @@ usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt 指定格式]
 查询单词意义,并以anki可以导入的方式输出
 
 positional arguments:
-  source_file
+
++  source_file
 
 optional arguments:
-  -h, --help    show this help message and exit
-  -o dest_file
-  --fmt 指定格式    其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换"
+
++  -h, --help    show this help message and exit
++  -o dest_file
++  --fmt 指定格式    其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换"
