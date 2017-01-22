@@ -4,11 +4,11 @@ import os.path
 from collections import defaultdict
 import hashlib
 from multiprocessing.dummy import Pool
-from dictionary.baiCiZhanDictionary import BaiCiZhanDictionary
 import sys
 import argparse
 import fileinput
 from urllib import request
+from dictionary.jsonDictionary import JsonDictionary
 
 def download_for_anki(url):
     if not url:
@@ -34,7 +34,7 @@ def dict2anki(d,fmt):
     return fmt.format_map(d)
 
 def vocabulary2anki(vocabulary,fmt):
-    dictionary = BaiCiZhanDictionary()
+    dictionary = JsonDictionary('http://mall.baicizhan.com/ws/search?w={}','mean_cn',r'；\s+','accent','st','sttr','http://baicizhan.qiniucdn.com/word_audios/{}.mp3','img')
     d = dictionary.search(vocabulary)
     return dict2anki(d,fmt)
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     if args.fmt:
         fmt = args.fmt
     else:
-        keys = ('{word}','{mean}','{acc}','{sentence_en}','{sentence_cn}','{img}','{mp3}')
+        keys = ('{word}','{mean}','{accent}','{sentence_en}','{sentence_cn}','{img}','{mp3}')
         fmt = "|".join(keys)
 
     words = source_file.readlines()
