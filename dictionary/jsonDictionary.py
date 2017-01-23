@@ -29,11 +29,16 @@ class JsonDictionary(Dictionary):
                     d = d.get(key,"")
         except Exception:
             d = ""
-        return d
+        return re.sub("[\n\r]+","<br>",d)
 
     def search(self,word):
-        url = self.url.format(word)
-        response = request.urlopen(url)
+        quoted_word = parse.quote(word)
+        url = self.url.format(quoted_word)
+        try:
+            response = request.urlopen(url)
+        except Exception:
+            print("query:{}".format(url))
+            raise
         explains = response.read()
         explains = json.loads(explains)
         result = {}
@@ -46,9 +51,9 @@ class JsonDictionary(Dictionary):
         if parse.urlparse(self.mp3).scheme == '':
             result["mp3"] = self.extract_from_dict(explains,self.mp3)
         else:
-            result["mp3"] = self.mp3.format(word)
+            result["mp3"] = self.mp3.format(quoted_word)
         if parse.urlparse(self.img).scheme == '':
             result["img"] = self.extract_from_dict(explains,self.img)
         else:
-            result["img"] = self.img.format(word)
+            result["img"] = self.img.format(quoted_word)
         return result
