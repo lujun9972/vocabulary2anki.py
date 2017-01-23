@@ -20,9 +20,9 @@ def download_for_anki(url):
         if not os.path.exists("collection.media"):
             os.makedirs("collection.media")
         request.urlretrieve(url,filepath)
-        if fileext in ('jpg','jpeg','gif','png','svg'):
+        if fileext in ('.jpg','.jpeg','.gif','.png','.svg'):
             filename =  '<img src="{}"></img>'.format(filename)
-        elif fileext in ('mp3','mp4','wav'):
+        elif fileext in ('.mp3','.mp4','.wav'):
             filename = '[sound:{}]'.format(filename)
     except Exception as e:
         print("fetch {} error:{}".format(url,e),file=sys.stderr)
