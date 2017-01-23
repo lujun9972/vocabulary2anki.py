@@ -46,7 +46,7 @@ class JsonDictionary(Dictionary):
         means = self.extract_from_dict(explains,self.means)
         result["mean"] = re.sub(self.mean_sep,'<br>',means)
         result["sentence_en"] = self.extract_from_dict(explains,self.sentence_en)
-        result["sentence_en"] = re.sub(r'({})'.format(re.escape(word)),r'<b>\1<b>',result["sentence_en"],0,re.I)
+        result["sentence_en"] = re.sub(r'({})'.format(re.escape(word)),r'<b>\1</b>',result["sentence_en"],0,re.I)
         result["sentence_cn"] = self.extract_from_dict(explains,self.sentence_cn)
         result["accent"] = self.extract_from_dict(explains,self.accent)
         if parse.urlparse(self.mp3).scheme == '':
