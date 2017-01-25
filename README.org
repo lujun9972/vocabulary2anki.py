@@ -5,7 +5,16 @@
 #+LANGUAGE:  zh-CN
 #+OPTIONS:  H:6 num:nil toc:t \n:nil ::t |:t ^:nil -:nil f:t *:t <:nil
 
-usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt format] source_file
+* What is vocabulary2anki?
+vocabulary2anki是一款用python3写的小工具,用来批量查询英文单词的意义,然后以anki可以倒入的方式输出.
+
+它的特点在于可配置性,理论上通过配置 =vocabulary2anki.cfg= 可以从任意的json/xml格式的字典接口中查询意义.
+
+并且为了防止单个字典接口存在单词量不足的情况,允许你一次配置多个字典接口.
+
+若同一个单词在多个字典接口都能查到意义,则以配置文件中后的靠后配置的那个为准.
+* Usage
+usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt format] [source_file]
 
 查询单词意义,并以anki可以导入的方式输出
 
@@ -18,3 +27,37 @@ optional arguments:
 +  -h, --help    show this help message and exit
 +  -o dest_file  存放结果的目标文件,如果省略,则会写入到标准输出中
 +  --fmt format  指定输出的格式,其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换,默认值为"{word}|{mean}|{accent}|{sentence_en}|{sentence_cn}|{img}|{mp3}"
+* How to Config
+下面是一个例子:
+#+BEGIN_SRC conf
+  [youdao]
+  type = xml
+  url = http://dict.youdao.com/fsearch?client=deskdict&keyfrom=chrome.extension&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng&q={}
+  means = .//custom-translation/translation/content
+  accent = .//phonetic-symbol
+  # mp3 = http://dict.youdao.com/dictvoice?audio={}&type=2
+  [baicizhan]
+  type = json
+  url = http://mall.baicizhan.com/ws/search?w={}
+  means = mean_cn
+  mean_sep = ；\s+
+  accent = accent
+  sentence_en = st
+  sentence_cn = sttr
+  mp3 = http://baicizhan.qiniucdn.com/word_audios/{}.mp3
+  img = img
+#+END_SRC
+
+配置项只能是 =type=, =url=, =means=, =mean_sep=, =accent=, =sentence_en=, =sentence_cn=, =mp3=, =img= 这几个.
+
+*其他的配置项会让程序出错!*
+  
+其中:
+| type        | 表示字典接口的格式,目前只支持json和xml两种格式的接口                                                                      |
+| url         | 表示字典接口的URL,其中的 ={}= 会被替换成待查询的单词                                                                      |
+| means       | 告诉程序,字典接口中那部分内容为释义,若接口为xml则它的值应该为一个xpath;若接口为json,则它的值是一个类似 =a.b.c= 这样的路径 |
+| accent      | 类似means,但是表示读音                                                                                                    |
+| sentence_en | 类似means,但是表示英文例句                                                                                                |
+| sentence_cn | 类似means,但是表示中文例句                                                                                                |
+| mp3         | 类似means,但是表示读音mp3的下载地址,且可以是一个类似url的字符串                                                           |
+| img         | 类似mp3,但是表示图片的下载地址                                                                                            |
