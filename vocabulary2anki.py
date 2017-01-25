@@ -7,8 +7,23 @@ from multiprocessing.dummy import Pool
 import sys
 import argparse
 from urllib import request
-from dictionary.jsonDictionary import JsonDictionary
 import fileinput
+import configparser
+import functools
+from dictionary.jsonDictionary import JsonDictionary
+from dictionary.xmlDictionary import XmlDictionary
+
+
+
+def get_instance_by_dict(d):
+    type = d['type']
+    del d['type']
+    if type == 'xml':
+        return XmlDictionary(**d)
+    elif type == 'json':
+        return JsonDictionary(**d)
+    else:
+        raise RuntimeError('未实现的字典类型:{}'.format(type))
 
 def download_for_anki(url):
     if not url:
@@ -38,8 +53,15 @@ def dict2anki(d,fmt):
     return fmt.format_map(d)
 
 def vocabulary2anki(vocabulary,fmt):
-    dictionary = JsonDictionary('http://mall.baicizhan.com/ws/search?w={}','mean_cn',r'；\s+','accent','st','sttr','http://baicizhan.qiniucdn.com/word_audios/{}.mp3','img')
-    d = dictionary.search(vocabulary)
+    conf = configparser.ConfigParser()
+    conf.read('vocabulary2anki.cfg')
+    sections = conf.sections()
+    dictionary_confs = map(lambda sec:dict(conf.items(sec)),sections)
+    dictionaries = map(get_instance_by_dict,dictionary_confs)
+    dicts = map(lambda dictionary:dictionary.search(vocabulary),dictionaries)
+    d = {}
+    for dic in dicts:
+        d.update(dic)
     return dict2anki(d,fmt)
 
 if __name__ == "__main__":
