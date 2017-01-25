@@ -49,5 +49,5 @@ class XmlDictionary(Dictionary):
         return result
 
 if __name__ == "__main__":
-    x = XmlDictionary('http://dict.youdao.com/fsearch?client=deskdict&keyfrom=chrome.extension&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng&q={}','.//custom-translation/translation/content')
+    x = XmlDictionary('http://dict.youdao.com/fsearch?client=deskdict&keyfrom=chrome.extension&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng&q={}','.//custom-translation/translation/content',accent='.//phonetic-symbol')
     print(x.search("hello"))
