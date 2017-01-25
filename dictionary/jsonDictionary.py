@@ -5,16 +5,6 @@ import re
 from .dictionary import Dictionary
 
 class JsonDictionary(Dictionary):
-    def __init__(self,url,means,mean_sep=r'\s+',accent='',sentence_en='',sentence_cn='',mp3='',img=''):
-        self.url = url
-        self.img = img
-        self.means = means
-        self.mean_sep = mean_sep
-        self.sentence_en = sentence_en
-        self.sentence_cn = sentence_cn
-        self.accent = accent
-        self.mp3 = mp3
-
     @staticmethod
     def extract_from_dict(d,path):
         try:
@@ -44,7 +34,10 @@ class JsonDictionary(Dictionary):
         result = {}
         result['word'] = word
         means = self.extract_from_dict(explains,self.means)
-        result["mean"] = re.sub(self.mean_sep,'<br>',means)
+        if self.mean_sep:
+            result["mean"] = re.sub(self.mean_sep,'<br>',means)
+        else:
+            result["mean"] = means
         result["sentence_en"] = self.extract_from_dict(explains,self.sentence_en)
         result["sentence_en"] = re.sub(r'({})'.format(re.escape(word)),r'<b>\1</b>',result["sentence_en"],0,re.I)
         result["sentence_cn"] = self.extract_from_dict(explains,self.sentence_cn)
