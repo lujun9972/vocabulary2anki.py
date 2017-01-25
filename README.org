@@ -10,7 +10,7 @@ vocabulary2anki是一款用python3写的小工具,用来批量查询英文单词
 
 它的特点在于可配置性,理论上通过配置 =vocabulary2anki.cfg= 可以从任意的json/xml格式的字典接口中查询意义.
 
-为了防止单个字典接口存在单词量不足的情况,允许你一次配置多个字典接口.
+为了防止单个字典接口存在单词量不足的情况,允许你一次配置多个字典接口. (默认配置了有道和百词斩连个接口)
 
 若同一个单词在多个字典接口都能查到意义,则以配置文件中靠后配置的那个为准.
 ** Usage
@@ -43,7 +43,7 @@ optional arguments:
   emacs
 #+END_SRC
 
-我要查询这两个单词的意义,读音,英文例句与中文例句,并用 =|= 作为分隔符写入到 =anki.txt= 中,那么可以执行:
+我要查询这两个单词的意义,英文例句与中文例句,并用 =|= 作为分隔符写入到 =anki.txt= 中,那么可以执行:
 #+BEGIN_SRC shell
   ./vocabulary2anki.py --fmt "{word}|{mean}|{accent}|{sentence_cn}" -o anki.txt vocabulary.txt
 #+END_SRC
