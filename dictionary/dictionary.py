@@ -11,6 +11,16 @@ class Dictionary(metaclass=ABCMeta):
         self.sentence_cn = sentence_cn
         self.accent = accent
         self.mp3 = mp3
+
+    @staticmethod
+    def clean_dict(d):
+        '''清理掉dict中value为空的键值对'''
+        cleand = {}
+        for k,v in d.items():
+            if v:
+                cleand[k] = v
+        return cleand
+
     @abstractmethod
     def search(self,word):
         raise RuntmeError("Not a real Dictionary")

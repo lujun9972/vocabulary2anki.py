@@ -46,7 +46,7 @@ class XmlDictionary(Dictionary):
             result["img"] = self.extract_from_element_tree(explains,self.img)
         else:
             result["img"] = self.img.format(quoted_word)
-        return result
+        return self.clean_dict(result)
 
 if __name__ == "__main__":
     x = XmlDictionary('http://dict.youdao.com/fsearch?client=deskdict&keyfrom=chrome.extension&pos=-1&doctype=xml&xmlVersion=3.2&dogVersion=1.0&vendor=unknown&appVer=3.1.17.4208&le=eng&q={}','.//custom-translation/translation/content',accent='.//phonetic-symbol')

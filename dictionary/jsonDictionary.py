@@ -50,4 +50,4 @@ class JsonDictionary(Dictionary):
             result["img"] = self.extract_from_dict(explains,self.img)
         else:
             result["img"] = self.img.format(quoted_word)
-        return result
+        return self.clean_dict(result)
