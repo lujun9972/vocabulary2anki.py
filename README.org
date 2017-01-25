@@ -13,20 +13,53 @@ vocabulary2anki是一款用python3写的小工具,用来批量查询英文单词
 为了防止单个字典接口存在单词量不足的情况,允许你一次配置多个字典接口.
 
 若同一个单词在多个字典接口都能查到意义,则以配置文件中靠后配置的那个为准.
-* Usage
-usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt format] [source_file]
+** Usage
+#+BEGIN_SRC shell :exports both :results org
+./vocabulary2anki.py -h
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_SRC org
+usage: vocabulary2anki.py [-h] [-o dest_file] [--fmt format]
+                          [source_file [source_file ...]]
 
 查询单词意义,并以anki可以导入的方式输出
 
 positional arguments:
-
-+  source_file   存放单词的源文件,每行一个词,如果不填,则会从标准输入读取单词
+  source_file   存放单词的源文件,每行一个词,如果不填,则会从标准输入读取单词
 
 optional arguments:
+  -h, --help    show this help message and exit
+  -o dest_file  存放结果的目标文件,如果省略,则会写入到标准输出中
+  --fmt format  指定输出的格式,其中{word},{mean},{accent},{sentence_en},{sentence_cn},{
+                img},{mp3}会被替换,默认值为"{word}|{mean}|{accent}|{sentence_en}|{sent
+                ence_cn}|{img}|{mp3}"
+#+END_SRC
 
-+  -h, --help    show this help message and exit
-+  -o dest_file  存放结果的目标文件,如果省略,则会写入到标准输出中
-+  --fmt format  指定输出的格式,其中{word},{mean},{accent},{sentence_en},{sentence_cn},{img},{mp3}会被替换,默认值为"{word}|{mean}|{accent}|{sentence_en}|{sentence_cn}|{img}|{mp3}"
+** example
+假设我有一个名为 =vocabulary.txt= 的文件,里面包含了一些不认识的单词:
+#+BEGIN_SRC text :tangle "vocabulary.txt"
+  vim
+  emacs
+#+END_SRC
+
+我要查询这两个单词的意义,读音,英文例句与中文例句,并用 =|= 作为分隔符写入到 =anki.txt= 中,那么可以执行:
+#+BEGIN_SRC shell
+  ./vocabulary2anki.py --fmt "{word}|{mean}|{accent}|{sentence_cn}" -o anki.txt vocabulary.txt
+#+END_SRC
+
+#+RESULTS:
+
+则会发现程序新生成了一个 =anki.txt= 文件,其内容为:
+#+BEGIN_SRC text
+  vim|n.精力，活力|He's such an energetic guy, full of <b>vim</b>, vigor and spunk!|
+  emacs|n. 编辑器，编译与测试；功能强大的编辑环境||
+#+END_SRC
+
+其中 =vim= 在有道和百词斩中都能查到意思,由于百词斩的接口比较靠后,因此使用的是百词斩中的意思,而英文例句和中文例句在有道接口中是没有的,因此使用了百词斩中的内容.
+
+而 =emacs= 只在有道中能查询到释义,在百词斩中查不到,因此这是使用的是来自有道接口中的释义,而中英文例句则为空.
+  
 * How to Config
 下面是一个例子:
 #+BEGIN_SRC conf
