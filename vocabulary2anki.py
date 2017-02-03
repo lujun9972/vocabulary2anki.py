@@ -66,6 +66,15 @@ def vocabulary2AnkiRecord(vocabulary,fmt):
         d.update(dic)
     return dict2AnkiRecord(d,fmt)
 
+def writeRecordsToFile(records,dest_file):
+    if dest_file:
+        dest_file = open(dest_file,'w')
+    else:
+        dest_file = sys.stdout
+    for record in records:
+        print(record,file=dest_file)
+    dest_file.close()
+
 if __name__ == "__main__":
     # 解析参数
     parser = argparse.ArgumentParser(description='查询单词意义,并以anki可以导入的方式输出')
@@ -79,11 +88,6 @@ if __name__ == "__main__":
     else:
         source_file = fileinput.input(args.source_file)
 
-    if args.dest_file:
-        dest_file = open(args.dest_file,'w')
-    else:
-        dest_file = sys.stdout
-
     if args.fmt:
         fmt = args.fmt
     else:
@@ -96,7 +100,5 @@ if __name__ == "__main__":
     words = map(lambda word:word.strip(),words)
     pool = Pool(10)
     records = pool.map(lambda word:vocabulary2AnkiRecord(word,fmt),words)
-    for record in records:
-        print(record,file=dest_file)
+    writeRecordsToFile(records,args.dest_file)
     source_file.close()
-    dest_file.close
