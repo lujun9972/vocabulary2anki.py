@@ -44,7 +44,7 @@ def download_for_anki(url):
         filename = ""
     return filename
 
-def dict2anki(d,fmt):
+def dict2AnkiRecord(d,fmt):
     d = defaultdict(lambda :"",d)
     if '{img}' in fmt:
         d['img'] = download_for_anki(d.get('img'))
@@ -54,7 +54,7 @@ def dict2anki(d,fmt):
         # d['mp3'] = mp3 and '[sound:{}]'.format(mp3)
     return fmt.format_map(d)
 
-def vocabulary2anki(vocabulary,fmt):
+def vocabulary2AnkiRecord(vocabulary,fmt):
     conf = configparser.ConfigParser()
     conf.read('vocabulary2anki.cfg')
     sections = conf.sections()
@@ -64,7 +64,7 @@ def vocabulary2anki(vocabulary,fmt):
     d = {}
     for dic in dicts:
         d.update(dic)
-    return dict2anki(d,fmt)
+    return dict2AnkiRecord(d,fmt)
 
 if __name__ == "__main__":
     # 解析参数
@@ -95,7 +95,7 @@ if __name__ == "__main__":
         words.append(line)
     words = map(lambda word:word.strip(),words)
     pool = Pool(10)
-    records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
+    records = pool.map(lambda word:vocabulary2AnkiRecord(word,fmt),words)
     for record in records:
         print(record,file=dest_file)
     source_file.close()
