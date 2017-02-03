@@ -15,7 +15,7 @@ from dictionary.xmlDictionary import XmlDictionary
 
 
 
-def get_instance_by_dict(d):
+def get_instance_by_conf(d):
     type = d['type']
     del d['type']
     if type == 'xml':
@@ -59,7 +59,7 @@ def vocabulary2anki(vocabulary,fmt):
     conf.read('vocabulary2anki.cfg')
     sections = conf.sections()
     dictionary_confs = map(lambda sec:dict(conf.items(sec)),sections)
-    dictionaries = map(get_instance_by_dict,dictionary_confs)
+    dictionaries = map(get_instance_by_conf,dictionary_confs)
     dicts = map(lambda dictionary:dictionary.search(vocabulary),dictionaries)
     d = {}
     for dic in dicts:
