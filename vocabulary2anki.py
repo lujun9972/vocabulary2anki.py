@@ -46,10 +46,10 @@ def download_for_anki(url):
 
 def dict2anki(d,fmt):
     d = defaultdict(lambda :"",d)
-    if 'img' in fmt:
+    if '{img}' in fmt:
         d['img'] = download_for_anki(d.get('img'))
         # d['img'] = img and '<img src="{}"></img>'.format(img)
-    if 'mp3' in fmt:
+    if '{mp3}' in fmt:
         d['mp3'] = download_for_anki(d.get('mp3'))
         # d['mp3'] = mp3 and '[sound:{}]'.format(mp3)
     return fmt.format_map(d)
