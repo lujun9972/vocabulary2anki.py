@@ -95,8 +95,9 @@ if __name__ == "__main__":
         words.append(line)
     words = map(lambda word:word.strip(),words)
     pool = Pool(10)
-    records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
-    for record in records:
-        print(record,file=dest_file)
+    pool.map(lambda word:print((vocabulary2anki(word,fmt)),file=dest_file), words)
+    # records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
+    # for record in records:
+    #     print(record,file=dest_file)
     source_file.close()
     dest_file.close
