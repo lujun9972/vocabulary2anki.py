@@ -2,7 +2,9 @@ import json
 from urllib import request,parse
 
 class AnkiConnectClient:
-    def __init__(self,url="http://127.0.0.1:8765"):
+    def __init__(self,url=None):
+        if not url:
+            url = "http://127.0.0.1:8765"
         self.url = url
     def _request(self,action,params):
         "Commuicate with AnkiConnect. PARAMS should be a dict"

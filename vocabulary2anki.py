@@ -14,7 +14,6 @@ from dictionary.jsonDictionary import JsonDictionary
 from dictionary.xmlDictionary import XmlDictionary
 
 
-
 def get_instance_by_conf(d):
     type = d['type']
     del d['type']
@@ -24,6 +23,7 @@ def get_instance_by_conf(d):
         return JsonDictionary(**d)
     else:
         raise RuntimeError('未实现的字典类型:{}'.format(type))
+
 
 def download_for_anki(url):
     if not url:
@@ -67,10 +67,6 @@ def vocabulary2AnkiRecord(vocabulary,fmt):
     return dict2AnkiRecord(d,fmt)
 
 def writeRecordsToFile(records,dest_file):
-    if dest_file:
-        dest_file = open(dest_file,'w')
-    else:
-        dest_file = sys.stdout
     for record in records:
         print(record,file=dest_file)
     dest_file.close()
@@ -88,6 +84,11 @@ if __name__ == "__main__":
     else:
         source_file = fileinput.input(args.source_file)
 
+    if args.dest_file:
+        dest_file = open(args.dest_file, 'w')
+    else:
+        dest_file = sys.stdout
+
     if args.fmt:
         fmt = args.fmt
     else:
@@ -99,6 +100,8 @@ if __name__ == "__main__":
         words.append(line)
     words = map(lambda word:word.strip(),words)
     pool = Pool(10)
-    records = pool.map(lambda word:vocabulary2AnkiRecord(word,fmt),words)
-    writeRecordsToFile(records,args.dest_file)
+    pool.map(lambda word:print(vocabulary2AnkiRecord(word,fmt),file=dest_file), words)
+    # records = pool.map(lambda word:vocabulary2anki(word,fmt),words)
+    # for record in records:
+    #     print(record,file=dest_file)
     source_file.close()
