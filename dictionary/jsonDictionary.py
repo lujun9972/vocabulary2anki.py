@@ -29,7 +29,7 @@ class JsonDictionary(Dictionary):
         except Exception:
             print("query:{}".format(url))
             raise
-        explains = response.read()
+        explains = response.read().decode('utf8')
         explains = json.loads(explains)
         result = {}
         result['word'] = word
